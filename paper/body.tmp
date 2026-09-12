@@ -1,19 +1,7 @@
-\documentclass[10pt]{article}
-\usepackage{tmlr}
-\usepackage{hyperref}
-\usepackage{url}
-\usepackage{amsmath,amssymb,booktabs,microtype}
-\usepackage{enumitem}
-\usepackage{graphicx}
-\usepackage{xcolor}
-\newcommand{\method}{\textsc{MRPO}}
-\title{When Minimax Hurts: A Pre-Registered Study of Robust Policy Optimization under Tool Drift}
-\author{Anonymous Authors}
-\begin{document}
-\maketitle
 \input{sections/abstract}
 \input{sections/introduction}
 \input{sections/related_work}
+
 \section{Problem Formulation and Audited Mechanisms}
 \label{sec:method-overview}
 We model tool use as a family of constrained partially observable Markov
@@ -151,6 +139,8 @@ explicitly accounted budgets.
 
 % Verification build uses the preserved generated bibliography because the
 % source references.bib is absent from the remote repository.
-
 \input{main.bbl}
+
 \end{document}
+
+
