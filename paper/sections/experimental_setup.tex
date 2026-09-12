@@ -1,0 +1,77 @@
+\section{Experimental Setup}
+\label{sec:experimental-setup}
+
+\subsection{Frozen tasks and calibration}
+
+The controlled environment contains executable stateful workflows with typed
+fault interventions and exact final-state verifiers.  The formal training set
+has 32 L1-geometry tasks: eight examples each for timeout, rate limiting,
+empty response, and truncated response.  Every task uses five candidates,
+four storage bins, and a deficit of three.  A separate 32-task held-out set
+contains authentication expiry, schema drift, delayed commit, and malformed
+redirect, again with eight examples per fault family.  Training and
+evaluation task identities are disjoint.
+
+Before any formal arm sees the primary suite, we calibrate the r10 reference
+adapter once.  Its 15/32 success rate falls within the preregistered
+30--70\% acceptance band, so dsweep-L1 is frozen as the primary
+discriminative instrument.  Task rows, fault assignments, split labels,
+turn budgets, and verifiers are not changed after this decision.
+
+\subsection{Model and training arms}
+
+All formal runs use Qwen3.5-9B, instantiated as
+\texttt{Qwen3\_5ForConditionalGeneration}, with LoRA adapters initialized
+from r10.  Training lasts 10 updates with batch size 32 and group size 4,
+giving 128 primary rollouts per update in every arm.  Primary advantages are
+grouped by task identity.  The optimizer uses learning rate $5\times10^{-6}$,
+KL coefficient 0.02, temperature 0.8, top-$p$ 0.95, maximum gradient norm
+1.0, and a 512-token generation cap.  Each task permits 11 interaction turns.
+
+We compare four arms.  \method{} includes both failure-prefix fission and
+fault-group minimax weighting.  GRPO includes neither mechanism.
+No-fission removes recovery branches while retaining the otherwise matched
+primary estimator.  No-minimax retains fission but removes group
+reweighting.  For the two fission-bearing arms, the additional recovery
+budget is fixed at 32 branch rollouts and 12,288 generated tokens per update.
+Thus all arms match primary sampling and task-level advantage grouping, while
+the extra branch cost remains an explicit property of fission rather than
+being hidden in the baseline.
+
+\subsection{Seeds and execution protocol}
+
+The pilot uses seed 23.  Its preregistered continuation signal is satisfied,
+so the exact protocol is copied to seeds 29 and 43.  These are the only formal
+seeds.  Each of the 12 runs completes all 10 updates.  Long-running jobs use
+unbuffered Python under process supervisors; a run is evaluated only after
+its final adapter is present and loadable.
+
+\subsection{Frozen evaluation}
+
+Each final adapter is evaluated on nine frozen suites: the dsweep-L1 primary
+and held-out instruments, five legacy suites, and two fault-v2 suites.  The
+evaluation command does not override the row-level turn budget.  The b2dev
+suite uses its development split; every other suite uses its frozen split.
+Decoding is greedy with evaluation seed 7 and a 512-token generation cap.
+All arms within a training seed receive identical task rows and fault
+assignments.
+
+Success is defined only by the executable state verifier.  The analysis reads
+episode outcomes from \texttt{paired.jsonl}; aggregate comparison fields are
+not used as a numerical source.  This preserves task-level pairing and avoids
+crediting a plausible textual answer when the environment state is wrong.
+
+\subsection{Preregistered inference and stopping}
+
+H1 compares \method{} with GRPO, H2 with no-minimax, and H3 with no-fission on
+the primary suite.  A hypothesis passes only if all three seed-level paired
+differences are positive and the pooled task-paired bootstrap 95\% confidence
+interval excludes zero.  Bootstrap intervals use 2,000 resamples and random
+seed 7.  The held-out L1 suite is reported separately and cannot rescue a
+failed primary hypothesis.
+
+A regression gate examines the five legacy and two fault-v2 suites relative
+to r10.  A confidence interval entirely below zero vetoes the round.  The
+stopping rule is also frozen: if H1--H3 all fail, the result is recorded as
+strengthened negative evidence after estimator matching, and no fourth round
+is opened.

@@ -1,0 +1,164 @@
+\documentclass[10pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,microtype}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{xcolor}
+
+\newcommand{\method}{\textsc{MRPO}}
+
+\title{Do Structured Recovery Objectives Improve Tool Agents?\\
+A Controlled Multi-Seed Audit}
+\author{Anonymous Authors}
+\date{}
+
+\begin{document}
+\maketitle
+
+\input{sections/abstract}
+\input{sections/introduction}
+\input{sections/related_work}
+
+\section{Problem Formulation and Audited Mechanisms}
+\label{sec:method-overview}
+We model tool use as a family of constrained partially observable Markov
+decision processes indexed by fault group $z\in\mathcal{Z}$.  An episode
+produces a verifier-defined binary task outcome and consumes interaction
+cost.  \method{} combines four mechanisms: it branches from typed failures in
+on-policy trajectories, rewards verifier-observed recovery progress, assigns
+a bounded recovery budget across eligible prefixes, and reweights fault
+groups toward higher loss while retaining a clean-group floor.
+
+Our empirical target is the incremental behavioral effect of those
+mechanisms.  The formal comparison therefore includes GRPO, no-fission, and
+no-minimax arms.  The matched arms share the base checkpoint, prompts, task
+distribution, primary rollout count, advantage grouping unit, optimizer
+schedule, and frozen evaluation episodes.  The two fission-bearing arms also
+share the same recovery budget.  No-fission tests
+whether the failure-prefix branches help once their estimator consequences
+are matched.  No-minimax tests the marginal effect of worst-group
+reweighting.  We treat \method{} as an audited composite rather than assuming
+that each component is beneficial by construction.
+
+\input{sections/experimental_setup}
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Preregistered primary-suite decision}
+
+Table~\ref{tab:r3-primary} reports verifier-confirmed successes on the frozen
+32-episode primary suite.  These values are read from the episode-paired
+evaluation artifacts; all comparisons use the same task identities within a
+seed.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Seed & \method{} & GRPO & no-fission & no-minimax & r10 \\
+\midrule
+23 & 16 & 17 & 16 & 21 & 15 \\
+29 & 15 & 14 & 18 & 21 & 15 \\
+43 & 17 & 17 & 16 & 20 & 15 \\
+\bottomrule
+\end{tabular}
+\caption{Success counts out of 32 on the frozen primary suite.  The r10
+column is the calibrated reference adapter, not a formal mechanism arm.}
+\label{tab:r3-primary}
+\end{table}
+
+None of the three preregistered hypotheses is supported.  For H1
+(\method{} versus GRPO), seed-level paired differences are $-1,+1,0$ and the
+pooled difference is 0/96, with a 95\% paired-bootstrap interval of
+$[-0.0938,0.0938]$.  For H2 (\method{} versus no-minimax), the differences are
+$-5,-6,-3$ and the pooled difference is $-14$/96, with interval
+$[-0.2604,-0.0312]$.  For H3 (\method{} versus no-fission), the differences
+are $0,-3,+1$ and the pooled difference is $-2$/96, with interval
+$[-0.1042,0.0625]$.  Each hypothesis required a common positive direction at
+all seeds and a pooled interval excluding zero.  H1--H3 therefore fail.
+
+\subsection{Regression gate and held-out behavior}
+
+The preregistered gate passes: every confidence interval associated with a
+nonzero regression warning includes zero.  The null mechanism results are
+therefore not caused by one arm collapsing at a single seed.  Relative to the
+r10 reference on the held-out suite, pooled paired intervals are
+$[-0.0104,0.1562]$ for \method{}, $[0.0104,0.1979]$ for GRPO,
+$[0.0312,0.1979]$ for no-fission, and $[0.0521,0.1979]$ for no-minimax.
+These secondary results show that formal RL can improve over the calibrated
+reference, but they do not support the specific \method{} mechanisms: the two
+arms without the claimed components have the clearest held-out gains.
+
+\section{Analysis}
+\label{sec:analysis}
+
+\paragraph{Estimator matching changes the interpretation.}
+Failure-prefix fission can appear beneficial when it also creates more
+samples or changes the advantage group.  After matching those quantities,
+\method{} minus no-fission changes sign across seeds and its pooled interval
+contains zero.  In this regime, branching does not induce an identifiable
+behavioral improvement beyond the estimator and data-allocation changes that
+normally accompany it.
+
+\paragraph{Minimax weighting is the stable negative result.}
+No-minimax is better at every seed by 5, 6, and 3 primary-suite episodes.  The
+pooled paired interval for \method{} minus no-minimax excludes zero below
+zero.  A plausible explanation is that the calibrated policy already sits
+near a budget-dependent phase boundary: upweighting weak fault groups spends
+limited updates on sparse, high-variance gradients and moves probability
+mass away from broadly useful behavior.  This explanation is mechanistic but
+not itself causally identified; the empirical conclusion is narrower and
+stronger: minimax weighting is harmful under the frozen protocol.
+
+\paragraph{Budget calibration is part of the result.}
+Pilot calibration prevented both a near-zero floor and a saturated ceiling.
+Even so, 32 binary episodes per seed yield wide intervals for small effects.
+The protocol can reliably reject the large positive mechanism story and can
+detect the larger minimax penalty, but it cannot rule out modest positive or
+negative effects for fission.  Additional rounds chosen after seeing these
+results would weaken the preregistration; we therefore stop after the planned
+three seeds.
+
+\paragraph{Relation to Fission-GRPO.}
+Fission-GRPO is a full recovery-training system with its own simulator,
+diagnostic feedback, recovery-instance construction, and benchmark mix
+\citep{zhang2026fissiongrpo}.  Our no-fission contrast is not an official
+reproduction of that system.  It tests whether the broader branching idea
+retains a marginal advantage in our typed executable environments when its
+rollout estimator is controlled.  The negative result limits transfer of the
+mechanism claim; it does not negate the reported end-to-end Fission-GRPO
+results.
+
+\section{Limitations and Broader Impact}
+\label{sec:limitations}
+The evidence comes from one model family and scale (Qwen3.5-9B with LoRA), a
+controlled fault taxonomy, three preregistered seeds, and small frozen binary
+evaluation suites.  The paired design improves sensitivity but does not make
+small effects identifiable.  Our structured diagnostics and exact state
+verifiers are stronger than signals available from many production APIs.
+
+We planned a zero-touch transfer evaluation after freezing all adapters.
+ToolBench-X technically fits the tool interface but its dataset terms require
+prior permission for copying or modification.  ToolMaze exposes no clearly
+applicable code or dataset license.  We did not download or adapt either
+dataset and report no external transfer score.  This legal and evidentiary
+boundary matters: controlled-environment findings have not been externally
+validated.
+
+Tool-recovery training can increase agent autonomy.  Deployment should retain
+authorization boundaries, idempotency controls, audit logs, and human
+confirmation for irreversible actions.  Negative findings should likewise
+not be generalized into a claim that recovery training never works; they show
+that component benefits must be demonstrated under matched estimators and
+explicitly accounted budgets.
+
+% Verification build uses the preserved generated bibliography because the
+% source references.bib is absent from the remote repository.
+\input{main.bbl}
+
+\end{document}

@@ -1,0 +1,61 @@
+% !TeX root = curriculum_supplement.tex
+% r9/r10 data-dilution ablation fragment (supplement to the frozen MRPO skeleton).
+% Referenced as sec:dilution by Table tab:curriculum-main.
+% Generated from episode-level artifacts; see curriculum_results/dilution_ablation.md.
+\section{Data-Dilution Ablation: Recovery Dose vs.\ Dataset Size}
+\label{sec:dilution}
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{lrccl}
+\toprule
+Round & $|D|$ & Recovery share & B2-test & $\Delta$ composition vs.\ r8 \\
+\midrule
+r8  & 113 & 10/113 = 8.8\% & 0.875 & baseline \\
+r9  & 132 & 10/132 = 7.6\% & \textbf{0.750} & +8 homogeneous first-try (all $d{=}4$/pr3, 2 bases) \\
+    &     &                &        & \quad +6 fault rows, +5 B3dup \\
+r10 & 120 & 10/120 = 8.3\% & 0.875 & r8 core +5 diverse first-try (deficit $[3,4,5,3,5]$) \\
+    &     &                &        & \quad +2 B3dup; homogeneous and fault rows removed \\
+\bottomrule
+\end{tabular}
+\caption{Three datasets, one behavioral question. r9 is the largest dataset and
+the only regression; r10 is smaller than r9 and restores r8 exactly.}
+\label{tab:dilution-setup}
+\end{table}
+
+\paragraph{Paired evidence chain (B2-test, task level).}
+r8 vs.\ r7: $+0.125$ $[0.000, 0.375]$, $c_{\text{only}}{=}1$ (recovery rows
+install retry-after-error). r9 vs.\ r8: $-0.125$ $[-0.375, 0.000]$,
+$b_{\text{only}}{=}1$ (dilution regression). r9 vs.\ r10: $-0.125$
+$[-0.375, 0.000]$, $b_{\text{only}}{=}1$ (r10 restores with fewer rows). r8 vs
+r10: $0.000$ with \emph{zero discordant tasks on all five suites} --- a perfect
+behavioral tie. The discordant task is the same one in every nonzero transition
+(08e7548c), so the regression is one mechanism, not noise. No other suite moves
+between r8/r9/r10 except the B1-fault swap (\S\ref{sec:failure-evolution}),
+attributable to the fault rows and reverted by r10.
+
+\paragraph{Mechanism.}
+The r9 addition of 8 homogeneous first-try rows --- all deficit-4/prio-rank-3, the
+exact geometry of the failing task, drawn from only 2 base recipes --- diluted the
+reference-recovery exemplar share (8.8\%$\to$7.6\%) while teaching first-try
+ordering on precisely the geometry where retry-after-error had to be retained; the
+previously fixed task regressed. r10 replaced them with 5 diverse-deficit rows (a
+smaller dataset, restored effective dose) and the task recovered with zero
+behavioral difference from r8. \emph{Composition beats size}: under a frozen SFT
+recipe, dataset growth without exemplar-diversity control is not neutral but
+actively risky.
+
+\paragraph{Generator geometry lockout.}
+Diversifying \emph{within} the failing geometry is blocked by the task generator:
+deficit-4 is hardcoded (workflow.py $\sim$632) over a 2-row, seed-invariant base
+pool; distractor quantities 9/8 vs.\ target 5 lock the prio-rank-3 structure;
+validation demands $\geq 3$ candidate ids (pr2 unreachable); 24{,}000 seed samples
+produced 0 acceptable variants; the sole knob is \texttt{target\_deficit}
+(domain $[2, \text{target\_qty})$). Hence r10 diversified across deficits rather
+than within $d4/\mathrm{pr}3$.
+
+\paragraph{Limitations.}
+Single seed and one run per dataset; the dose response is mapped at only three
+points; suite-level CIs are wide at $n{=}8$. The claim rests on the paired
+per-task chain and the exact r8$\equiv$r10 behavioral tie, not on marginal
+intervals.

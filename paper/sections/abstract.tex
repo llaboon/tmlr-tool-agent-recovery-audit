@@ -1,0 +1,26 @@
+\begin{abstract}
+Tool-agent recovery methods combine several changes at once: additional
+failure-conditioned rollouts, different advantage groups, recovery-specific
+rewards, and worst-group reweighting.  A gain under such a bundle does not
+identify which recovery mechanism caused it.  We conduct a controlled audit
+of Minimax Recovery Policy Optimization (\method{}) for a Qwen3.5-9B LoRA
+agent in executable, stateful tool environments.  Before training, we
+calibrate task difficulty, freeze task--fault manifests and state-based
+verifiers, and preregister three seed-level directional hypotheses.  We then
+compare \method{} with GRPO, no-fission, and no-minimax arms while matching
+primary rollout count and advantage grouping, fixing the branch budget for
+fission-bearing arms, and pairing evaluation episodes.  Across seeds 23, 29,
+and 43, none of the three hypothesized
+mechanism advantages replicates: the pooled paired success differences are
+0/96 for \method{} versus GRPO (95\% bootstrap CI
+$[-0.0938,0.0938]$), $-2$/96 versus no-fission
+($[-0.1042,0.0625]$), and $-14$/96 versus no-minimax
+($[-0.2604,-0.0312]$).  The preregistered regression gate passes, so the
+result is not explained by a catastrophic seed, but minimax weighting is
+consistently harmful in the primary suite.  These findings do not reproduce
+or contradict the full Fission-GRPO system; they show that, in our controlled
+regime, branching and minimax mechanisms do not retain an identifiable
+advantage after estimator matching.  The main contribution is therefore an
+auditable protocol and a multi-seed negative result that narrows when
+structured recovery objectives should be expected to help.
+\end{abstract}

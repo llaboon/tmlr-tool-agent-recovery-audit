@@ -1,0 +1,119 @@
+\section{Related Work}
+\label{sec:related-work}
+
+\subsection{Tool-Using Language Agents and Agentic Reinforcement Learning}
+
+ReAct demonstrated that interleaving language reasoning and actions can improve
+interactive decision making \citep{yao2023react}, while ToolLLM scaled
+instruction tuning to a large collection of real-world APIs
+\citep{qin2024toolllm}. Stateful benchmarks subsequently made it possible to
+evaluate whether an agent completes a goal rather than merely predicts a
+function name. $\tau$-bench evaluates tool-agent-user interaction in realistic
+domains, and $\tau^2$-Bench extends the setting to dual-control conversations in
+which both the user and the agent affect the trajectory
+\citep{yao2024taubench,barres2025tau2bench}.
+
+Reinforcement-learning approaches target limitations of supervised tool traces.
+ToolRL studies reward design for tool learning \citep{qian2025toolrl};
+AgentGym-RL trains agents over long-horizon, multi-turn interactions
+\citep{xi2025agentgymrl}; and VerlTool and RLFactory provide infrastructure for
+multi-turn rollout and post-training \citep{jiang2025verltool,chai2025rlfactory}.
+Many recent systems use group-relative policy optimization, popularized in
+open-model reasoning by DeepSeekMath \citep{shao2024deepseekmath}. Our work
+shares the executable, multi-turn training setting but studies whether recovery
+mechanisms remain identifiable after matching rollout estimators and interaction
+budgets.
+
+\subsection{Robustness, Noise, and Open-World Tool Use}
+
+Robustness studies show that function-call performance is sensitive to
+natural-language reformulations and changes in the available tool set
+\citep{rabinovich2025robustness}. AgentNoiseBench broadens this analysis to
+user-side and tool-side noise \citep{wang2026agentnoisebench}. ToolBench-X
+organizes recoverable tool-environment unreliability into specification drift,
+invocation error, execution failure, output drift, and cross-source conflict,
+with executable multi-step tasks \citep{tian2026unreliability}. OpenAgent
+studies query, action, observation, and domain shifts in an open-world hierarchy
+and finds that static training remains brittle under environmental change
+\citep{lv2026openagent}. Sim-to-real work further cautions that simulator success
+need not transfer to realistic tool execution \citep{zhou2026simulationlies}.
+
+NoisyAgent introduces a noise curriculum for perturbed environments
+\citep{chen2026noisyagent}, and EnvFactory studies executable environment
+synthesis and robust RL at scale \citep{xu2026envfactory}. These methods show
+that exposure to diverse environments can improve robustness. Our result is a
+boundary condition: in a strong-policy regime, environment difficulty can be
+dominated by the distance between the required recovery path and the turn
+budget. Floor and ceiling effects can then hide or mimic algorithmic gains. We
+therefore pre-calibrate the baseline into a fixed acceptance band before
+freezing the discriminative suite.
+
+\subsection{Failure Recovery and Reliability Evaluation}
+
+Fission-GRPO, accepted to ACL 2026, directly trains recovery by converting
+execution errors into on-policy corrective instances
+\citep{zhang2026fissiongrpo}. It augments failed trajectories with diagnostic
+feedback from a fine-tuned error simulator and resamples recovery rollouts,
+reporting gains on BFCL v4 Multi-Turn, $\tau$-bench, and $\tau^2$-Bench. Our
+failure-prefix branching is motivated by the same on-policy principle but uses
+typed executable failures and state verifiers, applies an explicit recovery
+budget, and adds fault-group minimax weighting. Crucially, our estimator-matched
+ablation does not establish an advantage for branching: the MRPO versus
+no-fission comparison changes sign across seeds and its pooled paired interval
+contains zero. This is not an official reproduction of Fission-GRPO; it shows
+that the general branching mechanism does not automatically transfer to our
+controlled fault families and training regime.
+
+Recent benchmarks make recovery itself the evaluation target. ToolMaze uses
+DAG-based task complexity and a two-by-two taxonomy of explicit versus implicit
+and transient versus permanent perturbations; it reports that implicit semantic
+failures reduce perturbation recovery rate by roughly 37\%\footnote{ToolMaze:
+\url{https://arxiv.org/abs/2606.05806}.}. ReliabilityBench evaluates a reliability
+surface over repeated-execution consistency, semantic perturbation intensity,
+and controlled fault intensity, including timeouts, rate limits, partial
+responses, and schema drift\footnote{ReliabilityBench:
+\url{https://arxiv.org/abs/2601.06112}.}. These evaluation-oriented works align
+with our separation of unconditional task success, fault exposure, conditional
+recovery, and recovery cost. Our additional focus is training-time
+identifiability: equalizing the number of primary rollouts, the advantage
+grouping unit, and the recovery budget before attributing a behavioral change
+to a recovery mechanism.
+
+Recoverability can also be summarized through regularity or risk measures. The
+ERR measure studies whether tool-augmented agents recover from failures
+\citep{vuddanti2026recoverability}, while ToolChain-CRC controls trajectory risk
+under retrieval and tool-use drift \citep{opoku2026toolchaincrc}. In our
+protocol, recovery requires verifier-confirmed task success and at least one
+non-faulted action after the final observed failure, avoiding credit for a
+hidden successful commit followed by immediate termination.
+
+\subsection{Rollout Allocation and Worst-Group Optimization}
+
+Tree-based agent training can spend most of its budget on redundant branches.
+InfoTree casts rollout selection under a fixed budget as an informativeness
+problem \citep{hu2026infotree}. \method{} instead scores failure prefixes using
+estimated frequency, non-recovery probability, uncertainty, group weakness, and
+expected cost. Our experiments show why generated-token accounting alone is
+insufficient: primary rollout count and advantage grouping must also be matched
+to identify a mechanism effect.
+
+Worst-group objectives are closely related to group distributionally robust
+optimization, which upweights high-loss groups to improve worst-case
+generalization \citep{sagawa2020groupdro}. We use fault families as groups and
+retain a clean-group floor. Group DRO itself is not a contribution. Moreover,
+the three-seed minimax ablation is consistently unfavorable: removing minimax
+weighting improves the primary-suite result, with a pooled paired interval below
+zero for MRPO minus no-minimax. We therefore present minimax weighting as a
+tested mechanism with a negative result, not as an empirically validated
+improvement.
+
+\paragraph{Positioning.}
+The nearest work contributes noisy-environment training, recovery-instance
+construction, and reliability evaluation. Our contribution is an auditable
+protocol for determining whether such mechanisms cause behavioral improvement:
+pre-calibrated and frozen executable tasks, estimator-matched ablations,
+multi-seed task-paired inference, and clean/fault regression gates. The protocol
+finds no reproducible MRPO advantage in the studied regime and identifies a
+stable negative effect from minimax weighting. This narrows the conditions under
+which structured recovery objectives should be expected to help, rather than
+claiming a new state of the art.

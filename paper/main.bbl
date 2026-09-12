@@ -1,0 +1,161 @@
+\begin{thebibliography}{22}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Barres et~al.(2025)Barres, Dong, Ray, Si, and
+  Narasimhan]{barres2025tau2bench}
+Victor Barres, Honghua Dong, Soham Ray, Xujie Si, and Karthik Narasimhan.
+\newblock $\tau^2$-bench: Evaluating conversational agents in a dual-control
+  environment.
+\newblock \emph{arXiv preprint arXiv:2506.07982}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2506.07982}.
+
+\bibitem[Chai et~al.(2025)Chai, Yin, Xu, et~al.]{chai2025rlfactory}
+Jiajun Chai, Guojun Yin, Zekun Xu, et~al.
+\newblock Rlfactory: A plug-and-play reinforcement learning post-training
+  framework for llm multi-turn tool-use.
+\newblock \emph{arXiv preprint arXiv:2509.06980}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2509.06980}.
+
+\bibitem[Chen et~al.(2026)Chen, Cai, Fang, et~al.]{chen2026noisyagent}
+Yuxin Chen, Xiaodong Cai, Junfeng Fang, et~al.
+\newblock Learning to act under noise: Enhancing agent robustness via noisy
+  environments.
+\newblock \emph{arXiv preprint arXiv:2605.27209}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2605.27209}.
+
+\bibitem[Holm(1979)]{holm1979multiple}
+Sture Holm.
+\newblock A simple sequentially rejective multiple test procedure.
+\newblock \emph{Scandinavian Journal of Statistics}, 6\penalty0 (2):\penalty0
+  65--70, 1979.
+
+\bibitem[Hu et~al.(2026)Hu, Yu, Cheng, Liu, and Song]{hu2026infotree}
+Yuelin Hu, Zhenbo Yu, Zhengxue Cheng, Wei Liu, and Li~Song.
+\newblock Maximizing rollout informativeness under a fixed budget: A submodular
+  view of tree search for tool-use agentic reinforcement learning.
+\newblock \emph{arXiv preprint arXiv:2605.05262}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2605.05262}.
+
+\bibitem[Jiang et~al.(2025)Jiang, Lu, Li, et~al.]{jiang2025verltool}
+Dongfu Jiang, Yi~Lu, Zhuofeng Li, et~al.
+\newblock Verltool: Towards holistic agentic reinforcement learning with tool
+  use.
+\newblock \emph{arXiv preprint arXiv:2509.01055}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2509.01055}.
+
+\bibitem[Lv et~al.(2026)Lv, Wu, Zhu, Cheng, and Guo]{lv2026openagent}
+Song-Lin Lv, Weiming Wu, Rui Zhu, Zi-Jian Cheng, and Lan-Zhe Guo.
+\newblock Can agents generalize to the open world? unveiling the fragility of
+  static training in tool use.
+\newblock \emph{arXiv preprint arXiv:2607.01084}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2607.01084}.
+
+\bibitem[Opoku and Banahene(2026)]{opoku2026toolchaincrc}
+Jeffery Opoku and David Banahene.
+\newblock Toolchain-crc: Conformal risk control for agentic ai under retrieval
+  and tool-use drift.
+\newblock \emph{arXiv preprint arXiv:2606.18467}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2606.18467}.
+
+\bibitem[Qian et~al.(2025)Qian, Acikgoz, He, et~al.]{qian2025toolrl}
+Cheng Qian, Emre~Can Acikgoz, Qi~He, et~al.
+\newblock Toolrl: Reward is all tool learning needs.
+\newblock \emph{arXiv preprint arXiv:2504.13958}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2504.13958}.
+
+\bibitem[Qin et~al.(2024)Qin, Liang, Ye, et~al.]{qin2024toolllm}
+Yujia Qin, Shihao Liang, Yining Ye, et~al.
+\newblock Toolllm: Facilitating large language models to master 16000+
+  real-world apis.
+\newblock In \emph{International Conference on Learning Representations}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2307.16789}.
+
+\bibitem[Rabinovich and Anaby-Tavor(2025)]{rabinovich2025robustness}
+Ella Rabinovich and Ateret Anaby-Tavor.
+\newblock On the robustness of agentic function calling.
+\newblock \emph{arXiv preprint arXiv:2504.00914}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2504.00914}.
+
+\bibitem[Sagawa et~al.(2020)Sagawa, Koh, Hashimoto, and
+  Liang]{sagawa2020groupdro}
+Shiori Sagawa, Pang~Wei Koh, Tatsunori~B. Hashimoto, and Percy Liang.
+\newblock Distributionally robust neural networks for group shifts: On the
+  importance of regularization for worst-case generalization.
+\newblock In \emph{International Conference on Learning Representations}, 2020.
+\newblock URL \url{https://openreview.net/forum?id=ryxGuJrFvS}.
+
+\bibitem[Shao et~al.(2024)Shao, Wang, Zhu, et~al.]{shao2024deepseekmath}
+Zhihong Shao, Peiyi Wang, Qihao Zhu, et~al.
+\newblock Deepseekmath: Pushing the limits of mathematical reasoning in open
+  language models.
+\newblock \emph{arXiv preprint arXiv:2402.03300}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2402.03300}.
+
+\bibitem[Tian et~al.(2026)Tian, Shi, Zhou, and Zhao]{tian2026unreliability}
+Yang Tian, Zhengpeng Shi, Yu~Zhou, and Bo~Zhao.
+\newblock Beyond function calling: Benchmarking tool-using agents under
+  tool-environment unreliability.
+\newblock \emph{arXiv preprint arXiv:2606.25819}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2606.25819}.
+
+\bibitem[Vuddanti and Chittiprolu(2026)]{vuddanti2026recoverability}
+Sri~Vatsa Vuddanti and Satwik~Kumar Chittiprolu.
+\newblock Recoverability has a law: The err measure for tool-augmented agents.
+\newblock \emph{arXiv preprint arXiv:2601.22352}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2601.22352}.
+
+\bibitem[Wang et~al.(2026)Wang, Chen, Wang, et~al.]{wang2026agentnoisebench}
+Ruipeng Wang, Yuxin Chen, Yukai Wang, et~al.
+\newblock Agentnoisebench: Benchmarking robustness of tool-using llm agents
+  under noisy condition.
+\newblock \emph{arXiv preprint arXiv:2602.11348}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2602.11348}.
+
+\bibitem[Xi et~al.(2025)Xi, Huang, Liao, et~al.]{xi2025agentgymrl}
+Zhiheng Xi, Jixuan Huang, Chenyang Liao, et~al.
+\newblock Agentgym-rl: Training llm agents for long-horizon decision making
+  through multi-turn reinforcement learning.
+\newblock \emph{arXiv preprint arXiv:2509.08755}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2509.08755}.
+
+\bibitem[Xu et~al.(2026)Xu, Wang, Deng, et~al.]{xu2026envfactory}
+Minrui Xu, Zilin Wang, Mengyi Deng, et~al.
+\newblock Envfactory: Scaling tool-use agents via executable environments
+  synthesis and robust rl.
+\newblock \emph{arXiv preprint arXiv:2605.18703}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2605.18703}.
+
+\bibitem[Yao et~al.(2023)Yao, Zhao, Yu, et~al.]{yao2023react}
+Shunyu Yao, Jeffrey Zhao, Dian Yu, et~al.
+\newblock React: Synergizing reasoning and acting in language models.
+\newblock In \emph{International Conference on Learning Representations}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2210.03629}.
+
+\bibitem[Yao et~al.(2024)Yao, Shinn, Razavi, and Narasimhan]{yao2024taubench}
+Shunyu Yao, Noah Shinn, Pedram Razavi, and Karthik Narasimhan.
+\newblock $\tau$-bench: A benchmark for tool-agent-user interaction in
+  real-world domains.
+\newblock \emph{arXiv preprint arXiv:2406.12045}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2406.12045}.
+
+\bibitem[Zhang et~al.(2026)Zhang, Zhao, Wang, Wang, Liang, Wang, Hu, Cao, and
+  Wong]{zhang2026fissiongrpo}
+Zhiwei Zhang, Fei Zhao, Rui Wang, Zezhong Wang, Bin Liang, Jiakang Wang, Yao
+  Hu, Shaosheng Cao, and Kam-Fai Wong.
+\newblock Robust tool use via fission-grpo: Learning to recover from execution
+  errors.
+\newblock \emph{arXiv preprint arXiv:2601.15625}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2601.15625}.
+
+\bibitem[Zhou et~al.(2026)Zhou, Yuan, Luo, et~al.]{zhou2026simulationlies}
+Xiaolin Zhou, Aojie Yuan, Zheng Luo, et~al.
+\newblock When simulation lies: A sim-to-real benchmark and domain-randomized
+  rl recipe for tool-use agents.
+\newblock \emph{arXiv preprint arXiv:2605.11928}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2605.11928}.
+
+\end{thebibliography}

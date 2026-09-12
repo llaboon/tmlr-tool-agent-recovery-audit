@@ -1,0 +1,78 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Language models increasingly act through external tools, modify persistent
+state, and operate over multiple turns.  Systems such as ReAct and ToolLLM
+established that models can interleave reasoning with actions and learn broad
+tool interfaces \citep{yao2023react,qin2024toolllm}.  Stateful benchmarks and
+reinforcement-learning frameworks now evaluate complete goals rather than
+isolated function selection
+\citep{yao2024taubench,barres2025tau2bench,jiang2025verltool,chai2025rlfactory,xi2025agentgymrl}.
+Yet tool execution in deployment is not stable: authentication expires,
+timeouts obscure whether writes committed, responses become stale or
+truncated, and schemas drift.  These events change observations and state
+transitions during an episode, so recovery requires more than retrying a
+failed call.
+
+Recent methods respond with noise curricula, failure-conditioned rollout
+generation, and explicit budget allocation
+\citep{chen2026noisyagent,zhang2026fissiongrpo,hu2026infotree}.  Such systems
+are necessarily composite.  Failure branching changes the number and
+distribution of rollouts; recovery branches may use a different advantage
+group; extra turns change generated-token and tool-call budgets; and
+worst-group weighting changes the optimization target.  Consequently, an
+end-to-end improvement does not by itself establish that branching or
+minimax weighting is the active mechanism.  This is particularly important
+for tool-agent RL, where small frozen evaluation sets and floor or ceiling
+effects can make a single seed look decisive.
+
+We study this identification problem through \method{}, a controlled recovery
+training system with typed failure-prefix branching, executable progress
+rewards, a bounded recovery budget, and fault-group minimax weighting.  Our
+question is not whether this collection can be made to produce an isolated
+positive run.  It is whether its proposed mechanisms retain a reproducible
+behavioral advantage once the rollout estimator and interaction budget are
+matched.
+
+The evaluation is frozen before the formal comparison.  We first calibrate a
+base adapter into a discriminative acceptance band, then freeze task--fault
+manifests, executable state verifiers, arm definitions, and stopping rules.
+Every arm is evaluated on the same episodes, enabling task-paired inference.
+The formal round uses Qwen3.5-9B with LoRA and exactly the preregistered seeds
+23, 29, and 43.  Three directional hypotheses isolate \method{} versus GRPO,
+no-minimax, and no-fission.  A hypothesis requires the same sign at all three
+seeds and a pooled paired-bootstrap confidence interval excluding zero; a
+separate regression gate can veto the round.
+
+The result is informative precisely because it is negative.  On the primary
+32-episode suite, \method{} scores 16, 15, and 17 successes across the three
+seeds.  Its paired differences versus GRPO are $-1,+1,0$; versus no-fission,
+$0,-3,+1$; and versus no-minimax, $-5,-6,-3$.  Thus no hypothesized advantage
+replicates.  Moreover, the pooled interval for \method{} minus no-minimax lies
+below zero, identifying minimax weighting as harmful in this regime.  The
+regression gate passes, which rules out a catastrophic-run interpretation.
+
+This work makes four contributions:
+
+\begin{itemize}[leftmargin=*]
+    \item We provide a pre-calibrated, frozen evaluation protocol for
+    executable tool-recovery RL, with task-paired outcomes, explicit
+    regression gates, and directional multi-seed decision rules.
+    \item We construct estimator-matched ablations that equalize primary
+    rollout count and advantage grouping, with a fixed recovery budget for
+    fission-bearing arms, separating mechanism claims from extra-sampling
+    effects.
+    \item We report a complete three-seed negative result: neither the full
+    \method{} arm nor failure-prefix fission has a reproducible primary-suite
+    advantage, while minimax weighting is consistently detrimental.
+    \item We document the boundary of the evidence.  The result concerns a
+    controlled Qwen3.5-9B LoRA regime and is not an official reproduction of
+    Fission-GRPO.  Planned zero-touch external evaluation could not be run
+    under a clearly applicable data and software license, so no external
+    transfer claim is made.
+\end{itemize}
+
+The contribution is therefore not a new state of the art.  It is evidence
+about identifiability: once estimators and budgets are aligned, intuitively
+appealing recovery components may have no measurable benefit, and robust
+worst-group optimization may even reduce task success.

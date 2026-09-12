@@ -1,0 +1,32 @@
+% Standalone wrapper compiling the curriculum supplement WITHOUT touching the
+% frozen MRPO paper skeleton (paper/main.tex and paper/sections/ are frozen).
+% Build: latexmk -pdf curriculum_supplement.tex  (or pdflatex twice)
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+
+\title{Curriculum SFT Supplement (r5--r10)\\
+\large Budgeted Recovery under Tool Drift --- companion material}
+\author{agent\_rl\_paper\_blueprint experiment line}
+\date{2026-08-20}
+
+\begin{document}
+\maketitle
+
+This supplement reports the r5--r10 curriculum-SFT line (Qwen3.5-9B, LoRA, single
+seed 23) as a companion to the frozen MRPO method-paper skeleton. All tables are
+generated from episode-level artifacts by
+\texttt{scripts\_extract\_eval\_results.py} / \texttt{scripts\_gen\_results\_table.py}
+/ \texttt{scripts\_dump\_pertask.py}; no numbers are hand-copied. r5 uses archived
+point estimates (episode artifacts lost in the 2026-08-20 node01 container
+reset); no interval is claimed for r5.
+
+\input{main_results_table}
+
+\input{failure_mode_evolution}
+
+\input{dilution_ablation}
+
+\end{document}

@@ -1,0 +1,80 @@
+% !TeX root = curriculum_supplement.tex
+% Failure-mode evolution fragment (supplement to the frozen MRPO skeleton).
+% Generated from episode-level artifacts; see curriculum_results/failure_mode_evolution.md
+% for provenance. Numbers produced by scripts_extract_eval_results.py /
+% scripts_dump_pertask.py / scripts_dump_episode.py (no hand-copied values).
+\section{Failure-Mode Evolution Across the Curriculum}
+\label{sec:failure-evolution}
+
+Every aggregate movement in Table~\ref{tab:curriculum-main} is attributable to six
+tasks; the remaining tasks pass in every round (all pairwise comparisons with zero
+discordant tasks). Table~\ref{tab:flips} lists the complete flip set and the two
+chronic failure pairs.
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{llccccc}
+\toprule
+Suite & Task & r6 & r7 & r8 & r9 & r10 \\
+\midrule
+B1-fault & 426ecaf9 & 1 & 1 & 1 & 1 & 1 \\
+B1-fault & a334f9e4 & 1 & 1 & 1 & \textbf{0} & 1 \\
+B1-fault & f842c82ad & \textbf{0} & \textbf{0} & \textbf{0} & 1 & \textbf{0} \\
+B2-dev   & 8c53cbe8 & \textbf{0} & 1 & 1 & 1 & 1 \\
+B2-dev   & aa74fc8e & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{0} \\
+B2-test  & 08e7548c & \textbf{0} & \textbf{0} & 1 & \textbf{0} & 1 \\
+B2-test  & c80b3e80 & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{0} \\
+\midrule
+B1-selection, B3-holdout & all tasks & \multicolumn{5}{c}{1 in every round} \\
+\bottomrule
+\end{tabular}
+\caption{Per-task success matrix (episode-artifact generated). Bold marks failures.
+r5 episode artifacts were lost; no r5 failure-set membership is claimed.}
+\label{tab:flips}
+\end{table}
+
+\paragraph{Class A: partition/arithmetic violations.}
+r5-era B2 failures were semantic (safety-stock violations, invalid transfer
+totals, insufficient source diversity). The r7 expert batch (20 B2 rows, 12 of
+them \emph{small-first} corrections of the ``lower id $\equiv$ larger stock''
+prior) resolved the last recoverable instance (8c53cbe8, $0{\to}1$ at r7, paired
+gain $+0.125$ $[0.000, 0.375]$, $c_{\text{only}}{=}1$) and partition/arithmetic
+behavior is perfect in r7--r10.
+
+\paragraph{Class B: injected-fault recovery (B3).}
+r5 scored $0.8125$ on B3-holdout; after the r6 dose increase B3 is 16/16 in every
+round, with \emph{zero} discordant tasks across all round pairs and all four fault
+groups. Installed recovery behavior was robust to every subsequent dataset change.
+
+\paragraph{Class C: order-reference trial-and-error.}
+The residual failure mode of the final baseline: the model probes distractor
+orders, is rejected with \texttt{invalid\_transfer\_total}, identifies the correct
+order, then exhausts the 8-call budget before \texttt{verify}. 08e7548c traces the
+full arc (fails r6/r7; fixed at r8 by reference-recovery rows; dilution regression
+at r9, \S\ref{sec:dilution}; restored at r10). c80b3e80 (double distractors,
+$d{=}4/\mathrm{pr}{=}3$, distractor quantities 9 and 8 vs.\ target 5) never
+passes: r10 terminates at \texttt{max\_turns} with exactly 8 calls, zero parse
+errors, per-turn completion tokens $29/28/189/189/187/14/67/51$ --- two probes,
+three full prepare-class calls, then short confirmations; \texttt{verify} falls one
+turn beyond budget. The B2-dev chronic failure aa74fc8e shows a near-identical
+episode signature (same SKU, same termination, tokens
+$29/28/185/183/184/14/66/50$), so we classify it in the same class by signature.
+
+\paragraph{Class D: fault-conditioned transcription precision.}
+B1-fault stays at $0.667$ in all six rounds, but via two different failure sets.
+a334f9e4 and f842c82ad share ids with B1-selection tasks that pass every round:
+the deficit is fault response, not task comprehension. r9's fault rows fixed
+f842c82ad but broke a334f9e4 (transaction-id transcription error
+b0bd$\to$b0bd0bd $\to$ \texttt{transaction\_not\_found} $\to$ retry exhausts the
+budget; episode shows \texttt{fault\_group=timeout}, \texttt{repeated\_calls=1},
+\texttt{max\_turns} at 8 calls) --- a perfect swap
+($c_{\text{only}}{=}b_{\text{only}}{=}1$, net $0.000$). r10 removed the fault rows
+and f842c82ad reverted as predicted: id-transcription precision is not teachable
+by expert trajectories under a zero-redundancy 8-call budget.
+
+\paragraph{Readout.}
+At the final baseline every remaining failure is (i) semantic, not protocol (zero
+parse errors in all rounds), (ii) budget-exhaustion-shaped (\texttt{max\_turns} at
+exactly 8 calls), and (iii) concentrated in distractor-dense B2 geometry plus the
+fault-transcription corner case. Turn-allocation policy under distractor density
+and id transcription under fault define the residual gap for a post-SFT stage.
